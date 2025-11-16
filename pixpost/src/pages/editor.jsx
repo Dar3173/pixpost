@@ -1,27 +1,66 @@
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
-import { Stage, Layer, Image as KonvaImage, Text } from "react-konva";
-import { useEffect, useRef, useState } from "react";
+import EditorToolbar from "../components/EditorToolbar";
+import { Rnd } from "react-rnd";
+
+// 👇 Importa tus plantillas SVG convertidas
+import Template01 from "../templates/Template01";
 
 export default function EditorPage() {
-  const stageRef = useRef(null);              // 👈 ahora sí se usa
-  const [templateImg, setTemplateImg] = useState(null);
-  const [text, setText] = useState("Tu texto aquí");
-  const [color, setColor] = useState("#000000");
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const canvasRef = useRef(null);
 
+  // 🎨 Estados principales
+  const [bgImage, setBgImage] = useState("");
+  const [customBg, setCustomBg] = useState(null);
+  const [title, setTitle] = useState("Tu texto aquí");
+  const [color, setColor] = useState("#ffffff");
+  const [fontSize, setFontSize] = useState(48);
+  const [fontFamily, setFontFamily] = useState("Anton, sans-serif");
+  const [image, setImage] = useState(null);
+  const [isVector, setIsVector] = useState(false);
+
+  // 📥 Detectar si la plantilla es SVG o imagen raster
   useEffect(() => {
-    const img = new window.Image();
-    img.crossOrigin = "anonymous";            // evita el canvas “tainted” al exportar
-    img.src = "/src/assets/templates/01.webp"; // luego hazlo dinámico con useParams
-    img.onload = () => setTemplateImg(img);
-  }, []);
+    if (id === "01") {
+      setIsVector(true);
+    } else {
+      setIsVector(false);
+      setBgImage(`/fondos/${id}.webp`);
+    }
+  }, [id]);
 
-  const handleExport = () => {
-    if (!stageRef.current) return;
-    const uri = stageRef.current.toDataURL({ pixelRatio: 2 });
-    const a = document.createElement("a");
-    a.href = uri;
-    a.download = "pixpost.png";
-    a.click();
+  // 📤 Subir imagen (objeto/persona)
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImage(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 📤 Subir fondo personalizado
+  const handleBgUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setCustomBg(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 📥 Descargar como imagen
+  const handleDownload = async (format = "png") => {
+    const html2canvas = (await import("html2canvas")).default;
+    const canvas = await html2canvas(canvasRef.current, { scale: 2 });
+    const dataUrl = canvas.toDataURL(`image/${format}`);
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `plantilla-${id}.${format}`;
+    link.click();
   };
 
   return (
@@ -29,53 +68,83 @@ export default function EditorPage() {
       <Navbar />
 
       <div className="flex flex-1">
-        {/* Canvas */}
-        <div className="flex-1 flex items-center justify-center bg-gray-100">
-          <Stage ref={stageRef} width={600} height={800}>
-            <Layer>
-              {templateImg && <KonvaImage image={templateImg} />}
-              <Text
-                text={text}
-                x={50}
-                y={50}
-                fontSize={28}
-                fill={color}
-                draggable
-              />
-            </Layer>
-          </Stage>
-        </div>
-
-        {/* Sidebar */}
-        <div className="w-72 bg-white shadow p-4 space-y-4">
-          <h2 className="font-semibold text-lg">Editar</h2>
-
-          <div>
-            <label className="block mb-1">Texto</label>
-            <input
-              className="w-full border rounded p-2"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1">Color</label>
-            <input
-              type="color"
-              className="w-full h-10"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-            />
-          </div>
-
-          <button
-            onClick={handleExport}
-            className="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-2 rounded hover:opacity-90"
+        {/* 🎨 Lienzo */}
+        <div className="flex-1 flex justify-center items-center bg-gray-100">
+          <div
+            ref={canvasRef}
+            className="relative w-[400px] h-[600px] border rounded-lg shadow overflow-hidden bg-white"
+            style={
+              !isVector
+                ? {
+                    backgroundImage: `url(${customBg || bgImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+                : {}
+            }
           >
-            Descargar PNG
-          </button>
+            {/* Si es vector, renderizamos el componente SVG */}
+            {isVector ? (
+              <Template01
+                title={title}
+                subtitle="Subtítulo"
+                textColor={color}
+                fontSize={fontSize}
+                bgColor="#fff8ba"
+              />
+            ) : (
+              <>
+                {/* Texto movible */}
+                <Rnd
+                  bounds="parent"
+                  default={{ x: 50, y: 50, width: "auto", height: "auto" }}
+                >
+                  <div
+                    style={{
+                      color,
+                      fontSize: `${fontSize}px`,
+                      fontFamily,
+                      textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                      cursor: "move",
+                    }}
+                  >
+                    {title}
+                  </div>
+                </Rnd>
+
+                {/* Imagen movible */}
+                {image && (
+                  <Rnd
+                    bounds="parent"
+                    default={{ x: 120, y: 300, width: 150, height: 150 }}
+                  >
+                    <img
+                      src={image}
+                      alt="imagen subida"
+                      className="w-full h-full object-contain cursor-move"
+                    />
+                  </Rnd>
+                )}
+              </>
+            )}
+          </div>
         </div>
+
+        {/* 🧰 Panel lateral */}
+        <EditorToolbar
+          title={title}
+          setTitle={setTitle}
+          color={color}
+          setColor={setColor}
+          fontSize={fontSize}
+          setFontSize={setFontSize}
+          fontFamily={fontFamily}
+          setFontFamily={setFontFamily}
+          handleImageUpload={handleImageUpload}
+          handleBgUpload={handleBgUpload}
+          handleDownload={handleDownload}
+          navigateBack={() => navigate("/")}
+        />
       </div>
     </div>
   );
