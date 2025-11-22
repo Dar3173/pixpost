@@ -3,6 +3,9 @@ import { Rnd } from "react-rnd";
 import Template01 from "../templates/Template01";
 import Template02 from "../templates/Template02";
 import Template03 from "../templates/Template03";
+import Template04 from "../templates/Template04";
+import Template05 from "../templates/Template05";
+
 
 
 const CanvasRenderer = forwardRef(
@@ -40,6 +43,9 @@ const CanvasRenderer = forwardRef(
             {templateId === "01" && <Template01 />}
             {templateId === "02" && <Template02 />}
             {templateId === "03" && <Template03 />}
+            {templateId === "04" && <Template04 />}
+            {templateId === "05" && <Template05 />}
+
 
 
           </>

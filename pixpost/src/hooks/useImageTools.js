@@ -17,7 +17,12 @@ export default function useImageTools(canvasRef, id) {
     else if (id === "03") {
       setImage("/templates/black.png");
     }
-    
+    else if (id === "04") {
+      setImage("/templates/modelo.png");
+    }
+    else if (id === "05") {
+      setImage("/templates/correr.png");
+    }
   }, [id]);
 
   // Tamaño + posición inicial según plantilla
@@ -54,6 +59,22 @@ export default function useImageTools(canvasRef, id) {
 
       posX = cw / 2 - initialW / 2; 
       posY = ch / 2 - initialH / 2.7;
+    }
+    else if (id === "04") {
+      // ⭐ Plantilla 04 
+      initialW = cw * 1.4;    
+      initialH = initialW;
+
+      posX = cw / 2 - initialW / 2; 
+      posY = ch / 2 - initialH / 3;
+    }
+    else if (id === "05") {
+      // ⭐ Plantilla 05 
+      initialW = cw * 1;    
+      initialH = initialW;
+
+      posX = cw / 2 - initialW / 2; 
+      posY = ch / 2 - initialH / 3;
     }
     
 

@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
 const templates = [
-  { id: "01", src: "/templates/01.svg", title: "Plantilla 1"},
-  { id: "02", src: "/templates/02.svg", title: "Plantilla 2"},
-  { id: "03", src: "/templates/03.svg", title: "Plantilla 3"},
+  { id: "01", src: "/templates/01.jpg", title: "Plantilla 1"},
+  { id: "02", src: "/templates/02.jpg", title: "Plantilla 2"},
+  { id: "03", src: "/templates/03.jpg", title: "Plantilla 3"},
+  { id: "04", src: "/templates/04.jpg", title: "Plantilla 4"},
+  { id: "05", src: "/templates/05.jpg", title: "Plantilla 5"},
 
 ];
 

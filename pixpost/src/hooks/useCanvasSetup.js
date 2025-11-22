@@ -4,6 +4,9 @@ const templateSizes = {
   "01": { width: 400, height: 700 },
   "02": { width: 400, height: 400 },
   "03": { width: 400, height: 400 },
+  "04": { width: 400, height: 700 },
+  "05": { width: 400, height: 700 },
+
 
 };
 
@@ -22,13 +25,21 @@ export default function useCanvasSetup(id) {
     // Detectar plantilla vector o imagen
     if (id === "01") {
       setIsVector(true);
-      setBgImage("/templates/template01-bg.png"); // si tienes un fondo aparte
+      setBgImage("/templates/template01-bg.png"); 
     } else if (id === "02") {
       setIsVector(true);
       setBgImage("/templates/template02-bg.png");
     } 
     else if (id === "03") {
-      setIsVector(true);              // 👈 Cambia a true si tienes Template03.jsx
+      setIsVector(true);              
+      setBgImage("/templates/template03-bg.png");
+    }
+    else if (id === "04") {
+      setIsVector(true);              
+      setBgImage("/templates/template03-bg.png");
+    }
+    else if (id === "05") {
+      setIsVector(true);              
       setBgImage("/templates/template03-bg.png");
     }
     
