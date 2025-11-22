@@ -1,13 +1,6 @@
 const categories = [
   "Todas las plantillas",
-  "Top del momento",
-  "Zapatos con estilo",
-  "Libros que enamoran",
-  "Dulce emprendimiento",
-  "Detalles con alma",
-  "Ropa con flow",
-  "Belleza y cuidado",
-  "Comida que enamora",
+
 ];
 
 export default function CategorySidebar() {

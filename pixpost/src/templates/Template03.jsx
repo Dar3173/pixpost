@@ -1,13 +1,11 @@
-export default function Template01() {
+export default function Template03() {
   return (
     <div
       className="absolute inset-0"
       style={{
-        backgroundImage: "url('/templates/plantilla01-fondo1.png')",
+        backgroundImage: "url('/templates/plantilla03-fondo1.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        width: "100%",
-        height: "100%",
         pointerEvents: "none",
         zIndex: 0,
       }}

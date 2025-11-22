@@ -8,10 +8,13 @@ export default function EditorToolbar({
   fontFamily,
   setFontFamily,
   handleImageUpload,
-  handleBgUpload,
+
   handleDownload,
   navigateBack,
- setCustomBg,
+
+  imageScale,
+  setImageScale,
+  removeImage
 }) {
   return (
     <div className="w-80 bg-white shadow p-4 space-y-4 overflow-y-auto">
@@ -68,34 +71,38 @@ export default function EditorToolbar({
       </div>
 
       {/* Imagen */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Subir imagen</label>
+      <div className="space-y-2">
+        <label className="block text-sm font-medium">Imagen</label>
+
         <input
           type="file"
           accept="image/*"
           onChange={handleImageUpload}
           className="w-full border rounded p-2"
         />
+
+        {/* Slider tamaño imagen */}
+        <label className="block text-xs text-gray-600">Tamaño</label>
+        <input
+          type="range"
+          min="0.2"
+          max="3"
+          step="0.05"
+          value={imageScale}
+          onChange={(e) => setImageScale(Number(e.target.value))}
+          className="w-full"
+        />
+        <p className="text-xs text-gray-500">{Math.round(imageScale * 100)}%</p>
+
+        {/* Botón eliminar */}
+        <button
+          onClick={removeImage}
+          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 w-full"
+        >
+          Eliminar imagen
+        </button>
       </div>
 
-      {/* Fondo */}
-      <div>
-        <label className="block text-sm font-medium mb-2">Fondo</label>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setCustomBg(null)}
-            className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300"
-            >
-            Fondo original
-            </button>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleBgUpload}
-            className="w-full border rounded p-2"
-          />
-        </div>
-      </div>
 
       {/* Descargar */}
       <div className="pt-2 flex flex-col gap-2">
