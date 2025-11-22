@@ -78,7 +78,7 @@ const CanvasRenderer = forwardRef(
         {/* ======= IMAGEN ======= */}
 {image && (
   <Rnd
-    bounds={false}   // ←  PERMITE SALIR DEL LIENZO
+    bounds={false}
     size={{
       width: imgSize.width * imageScale,
       height: imgSize.height * imageScale,
@@ -86,26 +86,30 @@ const CanvasRenderer = forwardRef(
     position={imgPosition}
     onDragStop={(e, d) => setImgPosition({ x: d.x, y: d.y })}
     onResizeStop={(e, dir, ref, delta, pos) => {
-      // actualizar tamaño sin afectar posición
       const newWidth = ref.offsetWidth;
       const newHeight = ref.offsetHeight;
 
       setImgPosition(pos);
-      setImgSize({ width: newWidth / imageScale, height: newHeight / imageScale });
+      setImgSize({
+        width: newWidth / imageScale,
+        height: newHeight / imageScale,
+      });
     }}
-    lockAspectRatio      // mantiene proporción sin bloquear movimiento
-    enableResizing       // permite redimensionar
+    lockAspectRatio
+    enableResizing
     minWidth={40}
     minHeight={40}
   >
     <img
-      src={image}
+      src={image?.src ? image.src : image}   // ← SOPORTA AMBOS TIPOS
+      crossOrigin="anonymous"
       alt="objeto"
       className="w-full h-full object-contain select-none pointer-events-none"
       draggable={false}
     />
   </Rnd>
 )}
+
 
       </div>
     );

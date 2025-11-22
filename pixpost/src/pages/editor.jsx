@@ -8,6 +8,7 @@ import CanvasRenderer from "../components/CanvasRenderer";
 import useCanvasSetup from "../hooks/useCanvasSetup";
 import useImageTools from "../hooks/useImageTools";
 
+import * as htmlToImage from "html-to-image";
 export default function EditorPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -37,6 +38,41 @@ export default function EditorPage() {
     setImageScale,
     setImgPosition,
   } = useImageTools(canvasRef, id);
+
+  // ============================================
+  //              EXPORTAR PNG / JPG
+  // ============================================
+  const handleDownload = async (format) => {
+    if (!canvasRef.current) return;
+
+    const node = canvasRef.current;
+
+    const options = {
+      quality: 1,
+      pixelRatio: 2, // HD
+      style: { transform: "none" },
+    };
+
+    try {
+      let dataUrl = null;
+
+      if (format === "png") {
+        dataUrl = await htmlToImage.toPng(node, options);
+      } else if (format === "jpeg") {
+        dataUrl = await htmlToImage.toJpeg(node, {
+          ...options,
+          quality: 0.95,
+        });
+      }
+
+      const link = document.createElement("a");
+      link.download = `plantilla-${id}.${format}`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error("Error exportando imagen:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -73,6 +109,9 @@ export default function EditorPage() {
           imageScale={imageScale}
           setImageScale={setImageScale}
           removeImage={removeImage}
+
+          handleDownload={handleDownload}
+
           navigateBack={() => navigate("/")}
         />
       </div>
